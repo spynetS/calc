@@ -1,0 +1,47 @@
+read '6' push to output
+Output:6
+
+Operator:
+
+read '/' push top operator
+Output:6
+
+Operator:/
+
+read '2' push to output
+Output:62
+
+Operator:/
+
+read '*' has heigher so pop them
+Output:62/
+
+Operator:*
+
+read '(' push to operators
+Output:62/
+
+Operator:*(
+
+read '1' push to output
+Output:62/1
+
+Operator:*(
+
+read '+' push top operator
+Output:62/1
+
+Operator:*(+
+
+read '2' push to output
+Output:62/12
+
+Operator:*(+
+
+read ) pop all untill ( 
+pop +
+
+62/12+*
+
+62/12+*
+6.000000/2.000000=1.000000+2.000000=3.000000*3.000000=
