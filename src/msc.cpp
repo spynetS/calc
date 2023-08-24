@@ -42,3 +42,13 @@ std::vector<std::string> split(std::string str,char ch){
 	splits.push_back(temp);
 	return splits;
 }
+
+std::string removeSpaces(std::string input){
+	std::string expresion;
+	for (char c : input) {
+		if (c != ' ') {
+			expresion += c;
+		}
+	}
+	return expresion;
+}

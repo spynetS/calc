@@ -8,5 +8,6 @@ float pop_return(std::stack<float> *stack);
 std::vector<std::string> stack_to_vector(std::stack<std::string> stack);
 std::vector<std::string> split(std::string str,char ch);
 void log_stack(std::stack<std::string> stack);
+std::string removeSpaces(std::string str);
 
 extern std::vector<std::string> math_operators;

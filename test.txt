@@ -1,19 +1,66 @@
-read '10' push to output
-Output:10
+Calculate expresionread '' push to output
+Output:
+
+Operator:
+
+
+
+
+
+read 'x' push to output
+Output:x
+
+Operator:
+
+x
+
+read '2' push to output
+Output:2
 
 Operator:
 
 read '+' push top operator
-Output:10
+Output:2
 
 Operator:+
 
-read '10' push to output
-Output:1010
+read '2' push to output
+Output:22
 
 Operator:+
 
-1010+
+22+
 
-1010+
-10.000000+10.000000=
+22+
+22+
+2.000000+2.000000=read '2' push to output
+Output:2
+
+Operator:
+
+read '+' push top operator
+Output:2
+
+Operator:+
+
+read '2' push to output
+Output:22
+
+Operator:+
+
+22+
+
+22+
+22+
+2.000000+2.000000=replace variable x to 4.000000
+4.000000
+4.000000
+Calculate expresionread '' push to output
+Output:
+
+Operator:
+
+
+
+
+

@@ -1,6 +1,11 @@
 #include <iostream>
+#include <iterator>
+#include <ostream>
+#include <string>
 #include <vector>
 #include <stack>
+#include <regex>
+#include "../include/Canvas.h"
 
 #include "../include/logger.h"
 #include "../include/calculate.h"
@@ -12,9 +17,107 @@ Calculator::Calculator(){
 	this->operators = math_operators;
 }
 
-float Calculator::calculate(std::vector<std::string> splited){
+void Calculator::graph(){
+	const char* bg = "##";
+	const char* c  = "";
+	Canvas *canvas = newCanvas(10,10,bg,c,c);
+	draw(canvas);
+
+}
+
+void Calculator::parse(){
+	// regex for function "name(arg1,...)"
+    std::regex pattern("^([a-zA-Z_][a-zA-Z0-9_]*)\\(([^)]*)\\)$");
+    std::smatch matches;
+
+	while(1){
+		std::cout<< "q to exit \n>" ;
+		
+		std::string expresion;
+		std::getline(std::cin,expresion);
+		expresion = removeSpaces(expresion);
+			
+		if(expresion == "q" || expresion == "exit") exit(0);
+		
+		// function defintion
+		if (std::regex_match(split(expresion,'=')[0], matches, pattern) && expresion.find("=") != std::string::npos ) {
+
+			// get the functin args
+			std::string argsStr = split(split(expresion, '(')[1],')')[0];
+			std::vector<std::string> args = split(argsStr,',');
+
+			//create a new function
+			Function f;
+			f.variables = args;
+			f.expression = to_posfix(split(expresion,'=')[1]);
+
+			std::string fname = split(expresion,'(')[0];
+			//save function to calculator list
+			this->functions[fname] = f;
+		}
+		//function call
+		else if (std::regex_match(split(expresion,'=')[0], matches, pattern)) {
+
+			
+			std::string fname = split(expresion,'(')[0];
+			Function f = this->functions[fname];
+
+			//get the arguments for the functions
+			std::string argsStr = split(expresion, '(')[1];
+			argsStr.pop_back();//remove last char it is )
+			std::vector<std::string> args = split(argsStr,',');
+			// create a variable map
+			std::map<std::string, float> variables;
+			// set name to value 
+			for(int i = 0; i < args.size(); i ++){
+				std::cout<< calculate(args[i]);
+				variables[f.variables[i]] = calculate(args[i]);
+			}
+
+
+			std::cout<< calculate_posfix(replace_variable(f.expression, variables)) <<std::endl;
+		}
+		// set variable
+		else if (expresion.find("=") != std::string::npos) {
+			std::vector<std::string> m = split(expresion,'=');
+			Logger::logl("Set variable "+m[1]);
+
+			variables[m[0]] = calculate(m[1]);
+
+			std::cout<< m[0] + " was set to ";
+			std::cout << variables[m[0]] << std::endl;
+
+
+		}
+		//calcualate expresion
+		else{
+			Logger::log("Calculate expresion");
+			std::cout << "=";
+			std::cout<< calculate_posfix(this->to_posfix(expresion)) << std::endl;
+		}
+	}
+}
+std::vector<std::string> Calculator::replace_variable(std::vector<std::string> splited, std::map<std::string,float> variables){
+	for(int i = 0; i < splited.size(); i ++){
+		std::map<std::string, float>::iterator it;
+
+		if (variables.find((splited)[i]) != variables.end()){
+			Logger::log("replace variable " +(splited)[i]);
+			(splited)[i] = std::to_string(variables[(splited)[i]]);
+			Logger::logl(" to " + (splited)[i]);
+		}
+	}
+	return splited;
+}
+
+float Calculator::calculate_posfix(std::vector<std::string> splited){
 	log_vector(splited);
 	std::stack<float> stack;
+	
+	splited = replace_variable(splited, variables);
+
+	log_vector(splited);
+
 	for(int i = 0; i < splited.size();i++){
 		std::string ch = splited[i]; //it is operatormain
 		if(contains(this->operators, ch)){
@@ -41,10 +144,10 @@ float Calculator::calculate(std::vector<std::string> splited){
 
 	return stack.top();
 }
-float Calculator::calculate(std::string expretion){
+float Calculator::calculate_posfix(std::string expretion){
 	std::vector<std::string> splited = split(expretion, ' ');
 	log_vector(splited);
-	return this->calculate(splited);
+	return this->calculate_posfix(splited);
 }
 int Calculator::op_value(std::string op){
 	if(op == "+") return 0;
@@ -147,3 +250,8 @@ std::vector<std::string> Calculator::to_posfix(std::string infix){
 
 	return s;	
 }
+
+float Calculator::calculate(std::string expretion){
+	return calculate_posfix(to_posfix(expretion));
+}
+

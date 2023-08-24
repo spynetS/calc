@@ -27,7 +27,7 @@ int main(int argc, char** argv){
 	
 	Logger::file = fopen("test.txt", "w");
 	Calculator c;
-	std::cout<<c.calculate(c.to_posfix(argv[1]));
+	c.graph();
 
 	return 0;
 }
