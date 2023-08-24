@@ -17,7 +17,6 @@
 #include <vector>
 #include <stdio.h>
 
-#include "include/posfix.h"
 #include "include/logger.h"
 #include "include/calculate.h"
 
@@ -28,8 +27,7 @@ int main(int argc, char** argv){
 	
 	Logger::file = fopen("test.txt", "w");
 	Calculator c;
-	Posfix p;
-	std::cout<<c.calculate(p.to_posfix(argv[1]));
+	std::cout<<c.calculate(c.to_posfix(argv[1]));
 
 	return 0;
 }
